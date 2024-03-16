@@ -1,0 +1,42 @@
+version: '3'
+
+services:
+
+  redis:
+    container_name: redis
+    image: redis
+    stdin_open: true
+    tty: true
+    ports: 
+      - "6379:6379"
+
+  django-server:
+    container_name: server
+    build: ./webapp
+    stdin_open: true
+    tty: true
+    depends_on:
+    - redis
+
+  agent:
+    container_name: agent-47
+    build: ./agent
+    stdin_open: true
+    tty: true
+    depends_on:
+      #- postgres
+      - django-server
+
+  user:
+    container_name: User
+    image: accetto/xubuntu-vnc-novnc-firefox:latest
+    stdin_open: true
+    tty: true
+    ports:
+    - "26901:6901"
+    - "25901:5901"
+
+
+#  db:
+#    container_name: db
+#    image: 
